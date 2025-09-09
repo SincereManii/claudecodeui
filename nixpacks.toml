@@ -1,0 +1,28 @@
+ providers = ["node", "python"]
+
+  [phases.setup]
+  nixPkgs = ["nodejs_20", "python312", "gcc", "gnumake", "pkg-config"]
+  aptPkgs = ["build-essential", "libudev-dev"]
+
+  [phases.install]
+  cmds = ["npm install node-gyp -g", "npm ci"]
+
+  [node]
+  version = "20"
+
+  [python]
+  version = "3.12"
+
+  Why This Works (From Railway Issue #904):
+
+  - providers = ["node", "python"] - Tells Nixpacks to set up both environments
+  - nixPkgs - Installs system packages needed for node-gyp
+  - aptPkgs - Provides build tools missing from the container
+  - Pre-install node-gyp globally - Ensures it's available during build
+
+  Alternative Simple Fix:
+
+  If the above is too complex, try this minimal version:
+  [phases.setup]
+  nixPkgs = ["python312", "gcc", "gnumake"]
+  aptPkgs = ["build-essential"]
